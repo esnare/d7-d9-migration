@@ -1,4 +1,4 @@
-uuid: 17ddf40d-450f-4884-9042-854f7842f5e0
+uuid: 8298059d-be24-42c3-8859-57eb337fe583
 langcode: en
 status: true
 dependencies:
@@ -25,7 +25,7 @@ content:
     weight: 5
     region: content
   field_first_name:
-    weight: 10
+    weight: 7
     settings:
       size: 60
       placeholder: ''
@@ -33,7 +33,7 @@ content:
     type: string_textfield
     region: content
   field_last_name:
-    weight: 11
+    weight: 8
     settings:
       size: 60
       placeholder: ''

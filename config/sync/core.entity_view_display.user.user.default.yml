@@ -1,4 +1,4 @@
-uuid: 71421298-8cfe-4472-ae42-ee2def55c0d3
+uuid: aa24dd52-9f1e-4c90-a8cc-a5503cc3aa8d
 langcode: en
 status: true
 dependencies:
@@ -19,7 +19,7 @@ bundle: user
 mode: default
 content:
   field_first_name:
-    weight: 9
+    weight: 6
     label: above
     settings:
       link_to_entity: false
@@ -27,7 +27,7 @@ content:
     type: string
     region: content
   field_last_name:
-    weight: 10
+    weight: 7
     label: above
     settings:
       link_to_entity: false
