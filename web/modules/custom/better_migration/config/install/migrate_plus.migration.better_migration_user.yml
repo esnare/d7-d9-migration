@@ -36,5 +36,10 @@ process:
   field_first_name: first_name
   field_last_name: last_name
   field_organisation: organisation
-  roles: ["member"]
-
+  roles:
+    plugin: static_map
+    source: roles
+    map:
+      3: "administrator"
+      4: "member"
+    bypass: TRUE

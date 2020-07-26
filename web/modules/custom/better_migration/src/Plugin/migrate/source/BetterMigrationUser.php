@@ -17,37 +17,42 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  *   id = "better_migration_user"
  * )
  */
-class BetterMigrationUser  extends SqlBase {
+class BetterMigrationUser extends SqlBase
+{
 
   /**
    * {@inheritdoc}
    */
-  public function query() {
-    return $this->select('users', 'u')
+    public function query()
+    {
+        return $this->select('users', 'u')
       ->fields('u', array_keys($this->baseFields()))
       ->condition('uid', 0, '>');
-  }
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function fields() {
-    $fields = $this->baseFields();
-    $fields['first_name'] = $this->t('First Name');
-    $fields['last_name'] = $this->t('Last Name');
-    $fields['organisation'] = $this->t('Organisation');
+    /**
+     * {@inheritdoc}
+     */
+    public function fields()
+    {
+        $fields = $this->baseFields();
+        $fields['first_name'] = $this->t('First Name');
+        $fields['last_name'] = $this->t('Last Name');
+        $fields['organisation'] = $this->t('Organisation');
+        $fields['roles'] = $this->t('Roles');
 
-    return $fields;
-  }
+        return $fields;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareRow(Row $row) {
-    $uid = $row->getSourceProperty('uid');
+    /**
+     * {@inheritdoc}
+     */
+    public function prepareRow(Row $row)
+    {
+        $uid = $row->getSourceProperty('uid');
 
-    // Organisation
-    $result = $this->getDatabase()->query('
+        // Organisation
+        $result = $this->getDatabase()->query('
       SELECT
         fld.field_first_name_value
       FROM
@@ -55,13 +60,13 @@ class BetterMigrationUser  extends SqlBase {
       WHERE
         fld.entity_id = :uid
     ', array(':uid' => $uid));
-    foreach ($result as $record) {
-      $row->setSourceProperty('first_name', $record->field_first_name_value );
-    }
+        foreach ($result as $record) {
+            $row->setSourceProperty('first_name', $record->field_first_name_value);
+        }
 
 
-    // Organisation
-    $result = $this->getDatabase()->query('
+        // Organisation
+        $result = $this->getDatabase()->query('
       SELECT
         fld.field_last_name_value
       FROM
@@ -69,12 +74,12 @@ class BetterMigrationUser  extends SqlBase {
       WHERE
         fld.entity_id = :uid
     ', array(':uid' => $uid));
-    foreach ($result as $record) {
-      $row->setSourceProperty('last_name', $record->field_last_name_value );
-    }
+        foreach ($result as $record) {
+            $row->setSourceProperty('last_name', $record->field_last_name_value);
+        }
 
-    // Organisation
-    $result = $this->getDatabase()->query('
+        // Organisation
+        $result = $this->getDatabase()->query('
       SELECT
         fld.field_organisation_value
       FROM
@@ -82,34 +87,53 @@ class BetterMigrationUser  extends SqlBase {
       WHERE
         fld.entity_id = :uid
     ', array(':uid' => $uid));
-    foreach ($result as $record) {
-      $row->setSourceProperty('organisation', $record->field_organisation_value );
+        foreach ($result as $record) {
+            $row->setSourceProperty('organisation', $record->field_organisation_value);
+        }
+
+        // Roles
+        $roles = [];
+        $result = $this->getDatabase()->query('
+         SELECT
+           sr.rid
+         FROM
+           {users_roles} sr
+         WHERE
+           sr.uid = :uid
+       ', array(':uid' => $uid));
+        foreach ($result as $record) {
+            $roles[] = $record->rid;
+        }
+
+        if (!empty($roles)) {
+            $row->setSourceProperty('roles', $roles);
+        }
+
+        return parent::prepareRow($row);
     }
 
-
-    return parent::prepareRow($row);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getIds() {
-    return array(
+    /**
+     * {@inheritdoc}
+     */
+    public function getIds()
+    {
+        return array(
       'uid' => array(
         'type' => 'integer',
         'alias' => 'u',
       ),
     );
-  }
+    }
 
-  /**
-   * Returns the user base fields to be migrated.
-   *
-   * @return array
-   *   Associative array having field name as key and description as value.
-   */
-  protected function baseFields() {
-    $fields = array(
+    /**
+     * Returns the user base fields to be migrated.
+     *
+     * @return array
+     *   Associative array having field name as key and description as value.
+     */
+    protected function baseFields()
+    {
+        $fields = array(
       'uid' => $this->t('User ID'),
       'name' => $this->t('Username'),
       'pass' => $this->t('Password'),
@@ -125,22 +149,22 @@ class BetterMigrationUser  extends SqlBase {
       'picture' => $this->t('Picture'),
       'init' => $this->t('Init'),
     );
-    return $fields;
+        return $fields;
+    }
 
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function bundleMigrationRequired()
+    {
+        return false;
+    }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function bundleMigrationRequired() {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function entityTypeId() {
-    return 'user';
-  }
-
+    /**
+     * {@inheritdoc}
+     */
+    public function entityTypeId()
+    {
+        return 'user';
+    }
 }
