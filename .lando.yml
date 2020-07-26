@@ -1,0 +1,34 @@
+name: drupal-9
+recipe: drupal9
+config:
+  webroot: web
+  php: "7.3"
+  xdebug: true
+services:
+  drupal7:
+    type: mysql:5.7
+    creds:
+      user: drupal7
+      password: drupal7
+      database: drupal7
+    run:
+      - echo "Importing Drupal 7 database ..."
+      - mysql -udrupal7 -pdrupal7 drupal7 < /app/drupal7.sql
+  appserver:
+    run:
+      #Install all modules and projects
+      - composer install
+      # A basic installation of a Drupal site
+      - drush site-install standard --db-url=mysql://drupal9:drupal9@database/drupal9 -y
+tooling:
+  user-sync:
+    service: appserver
+    description: Run the commands for migrating the user from drupal 7 to Drupal 8
+    cmd:
+      - echo "Installing migration modules"
+      - drush en better_migration -y
+      - echo "The migration process has started"
+      - drush migrate:import better_migration_user
+      - drush user-login
+
+
