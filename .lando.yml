@@ -21,7 +21,7 @@ services:
   appserver:
     run:
       #Install all modules and projects
-      - composer install
+     # - composer install
       # A basic installation of a Drupal site
       #- drush site-install standard --db-url=mysql://drupal9:drupal9@database/drupal9 -y
 tooling:
@@ -29,10 +29,10 @@ tooling:
     service: appserver
     description: Run the commands for migrating the user from drupal 7 to Drupal 8
     cmd:
-      - echo "Installing migration modules"
-      - drush en better_migration -y
+      #- echo "Installing migration modules"
+      #- drush en better_migration -y
       - echo "The migration process has started"
       - drush migrate:import better_migration_user
-      - drush user-login
+      #- drush user-login
 
 

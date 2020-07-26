@@ -56,7 +56,6 @@ class BetterMigrationUser  extends SqlBase {
         fld.entity_id = :uid
     ', array(':uid' => $uid));
     foreach ($result as $record) {
-      echo " ID: " .$uid . " - " .$record->field_first_name_value;
       $row->setSourceProperty('first_name', $record->field_first_name_value );
     }
 
@@ -71,7 +70,6 @@ class BetterMigrationUser  extends SqlBase {
         fld.entity_id = :uid
     ', array(':uid' => $uid));
     foreach ($result as $record) {
-      echo " ID: " .$uid . " - " .$record->field_last_name_value;
       $row->setSourceProperty('last_name', $record->field_last_name_value );
     }
 
