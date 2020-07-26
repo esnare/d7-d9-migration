@@ -14,12 +14,16 @@ services:
     run:
       - echo "Importing Drupal 7 database ..."
       - mysql -udrupal7 -pdrupal7 drupal7 < /app/drupal7.sql
+  database:
+    run:
+      - echo "Importing Drupal 9 database ..."
+      - mysql -udrupal9 -pdrupal9 drupal9 < /app/drupal9.sql
   appserver:
     run:
       #Install all modules and projects
       - composer install
       # A basic installation of a Drupal site
-      - drush site-install standard --db-url=mysql://drupal9:drupal9@database/drupal9 -y
+      #- drush site-install standard --db-url=mysql://drupal9:drupal9@database/drupal9 -y
 tooling:
   user-sync:
     service: appserver
