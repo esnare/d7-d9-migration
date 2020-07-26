@@ -1,0 +1,48 @@
+id: better_migration_user
+label: Custom Drupal Migration
+migration_group: custom
+
+# define a forced module dependency. this will cause the migration definition to be reloaded
+# when you uninstall and reinstall your custom module.
+dependencies:
+  enforced:
+    module:
+      - better_migration
+
+source:
+  plugin: better_migration_user
+  # The "target" here refers to the database connection where the source data lives.
+  # You will need to configure this database in your settings.php.
+  target: migration
+
+destination:
+  plugin: entity:user
+
+process:
+  uid: uid
+  name: name
+  pass: pass
+  mail: mail
+  status: status
+  created: created
+  changed: changed
+  access: access
+  login: login
+  timezone: timezone
+  langcode: language
+  preferred_langcode: language
+  preferred_admin_langcode: language
+  init: init
+  field_first_name: first_name
+  field_last_name: last_name
+  field_organisation: organisation
+  roles:
+    plugin: static_map
+    source: roles
+    map:
+      2: authenticated
+      3: administrator
+      4: author
+      5: guest_author
+      6: content_approver
+
